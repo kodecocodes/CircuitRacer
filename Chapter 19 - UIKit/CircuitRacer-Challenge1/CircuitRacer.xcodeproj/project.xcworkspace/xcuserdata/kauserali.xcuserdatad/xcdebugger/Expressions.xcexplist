@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "CircuitRacer.GameScene.initializeGame (CircuitRacer.GameScene)() -&gt; ():GameScene.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "carType">
+            </PersistentString>
+            <PersistentString
+               value = "carType.toRaw()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CircuitRacer.GameScene.update (CircuitRacer.GameScene)(Swift.Double) -&gt; ():GameScene.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "vector">
+            </PersistentString>
+            <PersistentString
+               value = "vector.angle">
+            </PersistentString>
+            <PersistentString
+               value = "carPosition">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CircuitRacer.GameViewController.viewDidLoad (CircuitRacer.GameViewController)() -&gt; ():GameViewController.swift">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
