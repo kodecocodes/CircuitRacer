@@ -26,9 +26,9 @@ extension SKNode {
 
 class GameViewController: UIViewController {
 
-    var carType : CarType!
-    var levelType : LevelType!
-    var analogControl : AnalogControl!
+    var carType: CarType!
+    var levelType: LevelType!
+    var analogControl: AnalogControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()

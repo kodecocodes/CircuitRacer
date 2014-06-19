@@ -10,8 +10,8 @@ import UIKit
 
 class SelectLevelViewController: UIViewController {
 
-    var carType : CarType!
-    var levelType : LevelType!
+    var carType: CarType!
+    var levelType: LevelType!
     
     @IBAction func levelButtonPressed(sender : UIButton) {
         SKTAudio.sharedInstance().playSoundEffect("button_press.wav")

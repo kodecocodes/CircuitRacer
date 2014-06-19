@@ -14,11 +14,10 @@ protocol AnalogControlPositionChange {
 
 class AnalogControl: UIView {
 
-    var test : Int = 0
-    var relativePosition : CGPoint!
-    var baseCenter : CGPoint!
-    var knobImageView : UIImageView!
-    var delegate : AnalogControlPositionChange?
+    var relativePosition: CGPoint!
+    var baseCenter: CGPoint!
+    var knobImageView: UIImageView!
+    var delegate: AnalogControlPositionChange?
     
     init(frame: CGRect) {
         super.init(frame: frame)

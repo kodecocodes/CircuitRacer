@@ -9,8 +9,6 @@
 import UIKit
 
 class SelectCarViewController: UIViewController {
-
-    var carTypeSelected : CarType?
     
     @IBAction func carButtonPressed(sender : UIButton) {
         SKTAudio.sharedInstance().playSoundEffect("button_press.wav")
