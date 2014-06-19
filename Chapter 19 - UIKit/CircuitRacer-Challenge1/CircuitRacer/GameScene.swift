@@ -10,18 +10,18 @@ import SpriteKit
 
 class GameScene: SKScene, AnalogControlPositionChange {
     
-    var carType : CarType!
-    var levelType : LevelType!
-    var box1 : SKSpriteNode!, box2 : SKSpriteNode!
-    var laps : SKLabelNode! , time : SKLabelNode!
-    var boxSoundAction : SKAction!, hornSoundAction : SKAction!, lapSoundAction : SKAction!, nitroSoundAction : SKAction!
-    var previousTimeInterval : CFTimeInterval = 0
+    var carType: CarType!
+    var levelType: LevelType!
+    var box1: SKSpriteNode!, box2: SKSpriteNode!
+    var laps: SKLabelNode! , time: SKLabelNode!
+    var boxSoundAction: SKAction!, hornSoundAction: SKAction!, lapSoundAction: SKAction!, nitroSoundAction: SKAction!
+    var previousTimeInterval: CFTimeInterval = 0
     
     var timeInSeconds = 0
     var noOfLaps = 0
     var maxSpeed = 0
-    var trackCenter : CGPoint = CGPointMake(0, 0)
-    var nextProgressAngle : Double = M_PI
+    var trackCenter = CGPointMake(0, 0)
+    var nextProgressAngle = M_PI
     
     typealias gameOverBlock = (didWin : Bool) -> Void
     var gameOverDelegate : gameOverBlock?
@@ -102,7 +102,7 @@ class GameScene: SKScene, AnalogControlPositionChange {
 
     func analogControlUpdated(relativePosition:CGPoint) {
  
-        let car : SKSpriteNode = self.childNodeWithName("car") as SKSpriteNode
+        let car = self.childNodeWithName("car") as SKSpriteNode
             
         car.physicsBody.velocity = CGVectorMake(relativePosition.x * Float(maxSpeed),
                                                 -relativePosition.y * Float(maxSpeed))
