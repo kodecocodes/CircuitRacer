@@ -145,11 +145,11 @@ class GameScene: SKScene, AnalogControlPositionChange {
         accel2D.y = Vector3.dotProduct(raw, right: ax)
         accel2D.normalize()
         
-        if fabsf(accel2D.x) < steerDeadZone {
+        if abs(accel2D.x) < steerDeadZone {
             accel2D.x = 0
         }
 
-        if fabsf(accel2D.y) < steerDeadZone {
+        if abs(accel2D.y) < steerDeadZone {
             accel2D.y = 0
         }
         
@@ -165,7 +165,7 @@ class GameScene: SKScene, AnalogControlPositionChange {
             var angleDelta = CGFloat(0.0)
             
             //3
-            if fabsf(orientationFromVelocity - car.zRotation) > 1 {
+            if abs(orientationFromVelocity - car.zRotation) > 1 {
                 //prevent wild rotation
                 angleDelta = orientationFromVelocity - car.zRotation
             } else {
