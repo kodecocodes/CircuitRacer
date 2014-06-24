@@ -187,6 +187,7 @@ class GameScene: SKScene, AnalogControlPositionChange {
         
         if self.paused {
             previousTimeInterval = currentTime
+            return
         }
         
         if currentTime - previousTimeInterval > 1 {
