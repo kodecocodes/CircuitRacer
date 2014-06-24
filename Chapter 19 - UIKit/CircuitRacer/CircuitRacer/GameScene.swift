@@ -104,8 +104,8 @@ class GameScene: SKScene, AnalogControlPositionChange {
  
         let car = self.childNodeWithName("car") as SKSpriteNode
             
-        car.physicsBody.velocity = CGVectorMake(relativePosition.x * Float(maxSpeed),
-                                                -relativePosition.y * Float(maxSpeed))
+        car.physicsBody.velocity = CGVectorMake(relativePosition.x * CGFloat(maxSpeed),
+                                                -relativePosition.y * CGFloat(maxSpeed))
         
         if !CGPointEqualToPoint(relativePosition, CGPointZero) {
             car.zRotation = CGPointMake(relativePosition.x, -relativePosition.y).angle
