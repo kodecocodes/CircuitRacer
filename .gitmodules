@@ -1,0 +1,3 @@
+[submodule "SKTUtils"]
+	path = SKTUtils
+	url = git@github.com:raywenderlich/SKTUtils.git
