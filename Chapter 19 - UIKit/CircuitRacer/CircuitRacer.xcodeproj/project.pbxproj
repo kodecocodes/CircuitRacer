@@ -121,7 +121,9 @@
 				617B2789194C912100D16C78 /* CircuitRacerTests */,
 				617B2771194C912000D16C78 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		617B2771194C912000D16C78 /* Products */ = {
 			isa = PBXGroup;
@@ -141,8 +143,6 @@
 				617B279A194CD2FF00D16C78 /* Sounds */,
 				617B2775194C912100D16C78 /* AppDelegate.swift */,
 				617B277D194C912100D16C78 /* Main.storyboard */,
-				617B2780194C912100D16C78 /* Images.xcassets */,
-				617B2773194C912000D16C78 /* Supporting Files */,
 				617B2796194CCE9300D16C78 /* SelectCarViewController.swift */,
 				617B2798194CCEA500D16C78 /* SelectLevelViewController.swift */,
 				617B277B194C912100D16C78 /* GameViewController.swift */,
@@ -151,6 +151,8 @@
 				617B2777194C912100D16C78 /* GameScene.sks */,
 				617B2779194C912100D16C78 /* GameScene.swift */,
 				6102D877194F332B0057D987 /* AnalogControl.swift */,
+				617B2780194C912100D16C78 /* Images.xcassets */,
+				617B2773194C912000D16C78 /* Supporting Files */,
 			);
 			path = CircuitRacer;
 			sourceTree = "<group>";
@@ -473,9 +475,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = CircuitRacer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -485,9 +488,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = CircuitRacer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

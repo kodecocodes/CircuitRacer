@@ -2,13 +2,21 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "btn-car3.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "btn-car3@2x.png"
+      "filename" : "btn-car3.png"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "2x",
+      "filename" : "btn-car3@2x~ipad.png"
     }
   ],
   "info" : {

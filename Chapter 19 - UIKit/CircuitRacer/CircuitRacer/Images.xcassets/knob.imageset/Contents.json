@@ -2,13 +2,21 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "knob.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "knob@2x.png"
+      "filename" : "knob.png"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "2x",
+      "filename" : "knob@2x~ipad.png"
     }
   ],
   "info" : {

@@ -1,164 +1,181 @@
-//
-//  GameScene.swift
-//  CircuitRacer
-//
-//  Created by Kauserali on 14/06/14.
-//  Copyright (c) 2014 Razeware. All rights reserved.
-//
+/*
+* Copyright (c) 2013-2014 Razeware LLC
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*/
 
 import SpriteKit
 
 class GameScene: SKScene, AnalogControlPositionChange {
+  
+  let boxSoundAction = SKAction.playSoundFileNamed("box.wav", waitForCompletion: false)
+  let hornSoundAction = SKAction.playSoundFileNamed("horn.wav", waitForCompletion: false)
+  let lapSoundAction = SKAction.playSoundFileNamed("lap.wav", waitForCompletion: false)
+  let nitroSoundAction = SKAction.playSoundFileNamed("nitro.wav", waitForCompletion: false)
+  
+  var playableRect: CGRect!
+  var carType: CarType!
+  var levelType: LevelType!
+  var box1: SKSpriteNode!, box2: SKSpriteNode!
+  var laps: SKLabelNode! , time: SKLabelNode!
+  var previousTimeInterval: CFTimeInterval = 0
+  
+  var timeInSeconds = 0, noOfLaps = 0, maxSpeed = 0
+  var trackCenter = CGPointMake(0, 0)
+  var nextProgressAngle = M_PI
+  
+  typealias gameOverBlock = (didWin : Bool) -> Void
+  var gameOverDelegate: gameOverBlock?
+  
+  override func didMoveToView(view: SKView) {
+    /* Setup your scene here */
     
-    var carType: CarType!
-    var levelType: LevelType!
-    var box1: SKSpriteNode!, box2: SKSpriteNode!
-    var laps: SKLabelNode! , time: SKLabelNode!
-    var boxSoundAction: SKAction!, hornSoundAction: SKAction!, lapSoundAction: SKAction!, nitroSoundAction: SKAction!
-    var previousTimeInterval: CFTimeInterval = 0
+    println("\(carType.description) \(levelType.description)")
     
-    var timeInSeconds = 0
-    var noOfLaps = 0
-    var maxSpeed = 0
-    var trackCenter = CGPointMake(0, 0)
-    var nextProgressAngle = M_PI
+    let maxAspectRatio = 16.0/9.0
+    let maxAspectRatioHeight = size.width/maxAspectRatio
+    let playableMargin = (size.height - maxAspectRatioHeight)/2
+    playableRect = CGRect(x: 0, y: playableMargin, width: size.width, height: size.height - playableMargin * 2)
     
-    typealias gameOverBlock = (didWin : Bool) -> Void
-    var gameOverDelegate: gameOverBlock?
-    
-    override func didMoveToView(view: SKView) {
-        /* Setup your scene here */
-
-        println("\(carType.description) \(levelType.description)")
-        initializeGame()
+    initializeGame()
+  }
+  
+  override func update(currentTime: CFTimeInterval) {
+    if previousTimeInterval == 0 {
+      previousTimeInterval = currentTime
     }
     
-    func initializeGame() {
-        loadLevel()
-        setupPhysicsBodies()
-        loadTrackTexture()
-        loadCarTexture()
-        loadObstacles()
-        addLabels()
-        
-        println("\(carType.toRaw())")
-        maxSpeed = 250 * (2 + carType.toRaw())
-        trackCenter = self.childNodeWithName("track").position
-        
-        boxSoundAction = SKAction.playSoundFileNamed("box.wav", waitForCompletion: false)
-        hornSoundAction = SKAction.playSoundFileNamed("horn.wav", waitForCompletion: false)
-        lapSoundAction = SKAction.playSoundFileNamed("lap.wav", waitForCompletion: false)
-        nitroSoundAction = SKAction.playSoundFileNamed("nitro.wav", waitForCompletion: false)
+    if paused {
+      previousTimeInterval = currentTime
+      return
     }
     
-    func loadLevel() {
-        let filePath = NSBundle.mainBundle().pathForResource("LevelDetails", ofType:"plist")!
-        let levels = NSArray(contentsOfFile: filePath)
-        
-        let levelData = levels[levelType.toRaw()] as NSDictionary
-        timeInSeconds = levelData["time"] as Int
-        noOfLaps = levelData["laps"] as Int
-    }
-    
-    func setupPhysicsBodies() {
-        //These just dont work in the editor
-        
-        //1. Add the inner boundary
-        let innerBoundary = SKNode()
-        innerBoundary.position = self.childNodeWithName("track").position
-        self.addChild(innerBoundary)
-        
-        let size = CGSizeMake(360, 240)
-        innerBoundary.physicsBody = SKPhysicsBody(rectangleOfSize:size)
-        innerBoundary.physicsBody.dynamic = false
-        
-        //2. Outer boundary
-        let trackFrame = CGRectInset(self.childNodeWithName("track").frame, 40, 0)
-        self.physicsBody = SKPhysicsBody(edgeLoopFromRect: trackFrame)
-    }
-    
-    func loadTrackTexture() {
-        let track  = self.childNodeWithName("track") as SKSpriteNode
-        track.texture = SKTexture(imageNamed: "track_" + "\(levelType.toRaw() + 1)")
-    }
-    
-    func loadCarTexture() {
-        let car = self.childNodeWithName("car") as SKSpriteNode
-        car.texture = SKTexture(imageNamed:"car_" + "\(carType.toRaw() + 1)")
-    }
-    
-    func loadObstacles() {
-        box1 = self.childNodeWithName("box_1") as SKSpriteNode
-        box2 = self.childNodeWithName("box_2") as SKSpriteNode
-    }
-    
-    func addLabels() {
-        laps = self.childNodeWithName("laps_label") as SKLabelNode
-        time = self.childNodeWithName("time_left_label") as SKLabelNode
-        
-        laps.text = "Laps: \(noOfLaps)"
+    if currentTime - previousTimeInterval > 1 {
+      timeInSeconds -= Int(currentTime - previousTimeInterval)
+      previousTimeInterval = currentTime
+      if timeInSeconds >= 0 {
         time.text = "Time: \(timeInSeconds)"
-    }
-
-    func analogControlUpdated(relativePosition:CGPoint) {
- 
-        let car = self.childNodeWithName("car") as SKSpriteNode
-            
-        car.physicsBody.velocity = CGVectorMake(relativePosition.x * CGFloat(maxSpeed),
-                                                -relativePosition.y * CGFloat(maxSpeed))
-        
-        if !CGPointEqualToPoint(relativePosition, CGPointZero) {
-            car.zRotation = CGPointMake(relativePosition.x, -relativePosition.y).angle
-        }
+      }
     }
     
-    func analogControlPositionChanged(analogControl: AnalogControl, position: CGPoint)  {
-        analogControlUpdated(position)
+    let carPosition = childNodeWithName("car").position
+    let vector = carPosition - trackCenter
+    let progressAngle = Double(vector.angle) + M_PI
+    
+    if progressAngle > nextProgressAngle && (progressAngle - nextProgressAngle) < M_PI_4 {
+      //advance on track
+      nextProgressAngle += M_PI_2
+      if nextProgressAngle >= (2 * M_PI) {
+        nextProgressAngle = 0
+      }
+      
+      if fabs(nextProgressAngle - M_PI) < Double(FLT_EPSILON) {
+        noOfLaps -= 1
+        laps.text = "Laps: \(noOfLaps)"
+        runAction(lapSoundAction)
+      }
     }
     
-    override func update(currentTime: CFTimeInterval) {
-        if previousTimeInterval == 0 {
-            previousTimeInterval = currentTime
-        }
-        
-        if self.paused {
-            previousTimeInterval = currentTime
-            return
-        }
-        
-        if currentTime - previousTimeInterval > 1 {
-            timeInSeconds -= Int(currentTime - previousTimeInterval)
-            previousTimeInterval = currentTime
-            if timeInSeconds >= 0 {
-                time.text = "Time: \(timeInSeconds)"
-            }
-        }
-        
-        let carPosition = self.childNodeWithName("car").position
-        let vector = carPosition - trackCenter
-        let progressAngle = Double(vector.angle) + M_PI
-        
-        if progressAngle > nextProgressAngle && (progressAngle - nextProgressAngle) < M_PI_4 {
-            //advance on track
-            nextProgressAngle += M_PI_2
-            if nextProgressAngle >= (2 * M_PI) {
-                nextProgressAngle = 0
-            }
-
-            if fabs(nextProgressAngle - M_PI) < Double(FLT_EPSILON) {
-                noOfLaps -= 1
-                laps.text = "Laps: \(noOfLaps)"
-                self.runAction(lapSoundAction)
-            }
-        }
-        
-        if timeInSeconds < 0 || noOfLaps == 0 {
-            self.paused = true
-            
-            if let gameOverCallback = gameOverDelegate {
-                gameOverCallback(didWin: noOfLaps == 0)
-            }
-            println("Game over")
-        }
+    if timeInSeconds < 0 || noOfLaps == 0 {
+      paused = true
+      
+      if let gameOverCallback = gameOverDelegate {
+        gameOverCallback(didWin: noOfLaps == 0)
+      }
+      println("Game over")
     }
+  }
+  
+  func initializeGame() {
+    
+    loadLevel()
+    setupPhysicsBodies()
+    loadTrackTexture()
+    loadCarTexture()
+    loadObstacles()
+    addLabels()
+    
+    println("\(carType.toRaw())")
+    maxSpeed = 250 * (2 + carType.toRaw())
+    trackCenter = childNodeWithName("track").position
+  }
+  
+  func loadLevel() {
+    let filePath = NSBundle.mainBundle().pathForResource("LevelDetails", ofType:"plist")!
+    let levels = NSArray(contentsOfFile: filePath)
+    
+    let levelData = levels[levelType.toRaw()] as NSDictionary
+    timeInSeconds = levelData["time"] as Int
+    noOfLaps = levelData["laps"] as Int
+  }
+  
+  func setupPhysicsBodies() {
+    
+    //1. Add the inner boundary
+    let innerBoundary = SKNode()
+    innerBoundary.position = childNodeWithName("track").position
+    addChild(innerBoundary)
+    
+    let size = CGSizeMake(360, 240)
+    innerBoundary.physicsBody = SKPhysicsBody(rectangleOfSize:size)
+    innerBoundary.physicsBody.dynamic = false
+    
+    //2. Outer boundary
+    physicsBody = SKPhysicsBody(edgeLoopFromRect: playableRect)
+  }
+  
+  func loadTrackTexture() {
+    let track  = childNodeWithName("track") as SKSpriteNode
+    track.texture = SKTexture(imageNamed: "track_" + "\(levelType.toRaw() + 1)")
+  }
+  
+  func loadCarTexture() {
+    let car = childNodeWithName("car") as SKSpriteNode
+    car.texture = SKTexture(imageNamed:"car_" + "\(carType.toRaw() + 1)")
+  }
+  
+  func loadObstacles() {
+    box1 = childNodeWithName("box_1") as SKSpriteNode
+    box2 = childNodeWithName("box_2") as SKSpriteNode
+  }
+  
+  func addLabels() {
+    laps = childNodeWithName("laps_label") as SKLabelNode
+    time = childNodeWithName("time_left_label") as SKLabelNode
+    
+    laps.text = "Laps: \(noOfLaps)"
+    time.text = "Time: \(timeInSeconds)"
+  }
+  
+  func analogControlUpdated(relativePosition:CGPoint) {
+    
+    let car = childNodeWithName("car") as SKSpriteNode
+    
+    car.physicsBody.velocity = CGVectorMake(relativePosition.x * CGFloat(maxSpeed),
+      -relativePosition.y * CGFloat(maxSpeed))
+    
+    if !CGPointEqualToPoint(relativePosition, CGPointZero) {
+      car.zRotation = CGPointMake(relativePosition.x, -relativePosition.y).angle
+    }
+  }
+  
+  func analogControlPositionChanged(analogControl: AnalogControl, position: CGPoint)  {
+    analogControlUpdated(position)
+  }
 }
